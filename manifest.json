@@ -1,15 +1,18 @@
 {
-  "name": "service-example",
-  "vendor": "vtex",
-  "version": "0.2.22",
-  "title": "Service Example",
-  "description": "Reference app for VTEX IO Services",
+  "name": "seller-collections-main",
+  "vendor": "tewbhv",
+  "version": "0.0.1",
+  "title": "Seller collections",
+  "description": "Seller collections Main App for major account",
   "mustUpdateAt": "2018-01-04",
   "categories": [],
   "dependencies": {},
   "builders": {
     "node": "6.x",
-    "docs": "0.x"
+    "docs": "0.x",
+    "admin": "0.x",
+    "react": "3.x",
+    "messages": "1.x"
   },
   "scripts": {
     "prereleasy": "bash lint.sh"
@@ -17,17 +20,108 @@
   "credentialType": "absolute",
   "policies": [
     {
+      "name": "colossus-fire-event"
+    },
+    {
+      "name": "AcessaTodosPedidos"
+    },
+    {
       "name": "outbound-access",
       "attrs": {
-        "host": "httpstat.us",
+        "host": "app.io.vtex.com",
         "path": "*"
       }
     },
     {
-      "name": "colossus-fire-event"
+      "name": "outbound-access",
+      "attrs": {
+        "host": "*.myvtex.com",
+        "path": "*"
+      }
+    },
+    {
+      "name": "LogisticsAdmin"
+    },
+    {
+      "name": "read_prices"
+    },
+    {
+      "name": "POWER_USER_DS"
+    },
+    {
+      "name": "ADMIN_DS"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.vtex.com",
+        "path": "/dataentities/*"
+      }
+    },
+    {
+      "name": "OMSViewer"
+    },
+    {
+      "name": "ListOrders"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.vtex.com",
+        "path": "/{{account}}/pricing/*"
+      }
+    },
+    {
+      "name": "Save_User"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.vtex.com",
+        "path": "/{{account}}/pricing/*"
+      }
     },
     {
       "name": "colossus-write-logs"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "vtex-validator.herokuapp.com",
+        "path": "/send"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/api/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.vtex.com",
+        "path": "/api/*"
+      }
+    },
+    {
+      "name": "Get_Account_By_Identifier"
+    },
+    {
+      "name": "vbase-read-write"
+    },
+    {
+      "name": "Get_Account_By_Identifier"
+    },
+    {
+      "name": "Create_Role_User"
+    },
+    {
+      "name": "Get_Users_By_Account"
+    },
+    {
+      "name": "Get_Resource_By_Key"
     }
   ],
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"

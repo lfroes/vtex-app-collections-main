@@ -1,0 +1,7 @@
+{
+    "admin.app.seller-collections-main": {
+      "component": "collectionsMain",
+      "path": "/admin/app/seller-collections-app"
+    }
+  }
+  
