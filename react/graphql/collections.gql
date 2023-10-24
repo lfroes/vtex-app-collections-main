@@ -1,0 +1,9 @@
+query collections($searchKey: String) {
+    collections(searchKey: $searchKey) {
+        items {
+            name
+            id
+            status
+        }
+    }
+}

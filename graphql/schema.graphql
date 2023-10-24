@@ -1,0 +1,29 @@
+type Query {
+  helloworld: String
+  sharedCollections: [Collection]
+  verify: Boolean
+  getCollections: [CollectionIntern]
+}
+
+type Collection {
+  collectionId: String
+}
+
+type Mutation {
+  clearMasterData: Boolean
+  changeSellerEmail(email: String, id: String): Boolean
+}
+
+
+type CollectionIntern {
+  id: Int
+  name: String
+  searchable: Boolean
+  highlight: Boolean
+  dateFrom: String
+  dateTo: String
+  totalSku: Int
+  totalProducts: Int
+  type: String
+  lastModifiedBy: String
+}
