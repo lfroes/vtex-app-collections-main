@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import ButtonWithIcon from '@vtex/styleguide/lib/ButtonWithIcon'
 import PlusLines from '@vtex/styleguide/lib/icon/PlusLines'
 import Modal from '@vtex/styleguide/lib/Modal'
@@ -15,20 +15,35 @@ const plus = <PlusLines />;
 const CollectionsOptions = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [searchResult, setSearchResult] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const client = useApolloClient();
 
-    const getCollections = async (e) => {
-        console.log(e, 'searchRef');
-        // const { data } = await client.query({
-        //     query: collections,
-        //     variables: {
-        //         searchTerm: searchRef.current.value
-        //     }
-        // });
+    const getCollections = async (searchParam) => {
+        console.log(searchParam, 'searchParam')
+        const { data } = await client.query({
+            query: collections,
+            fetchPolicy: 'no-cache',
+            variables: {
+                searchKey: searchParam
+            }
+        });
 
-        // setSearchResult(data.collections.items);
+        if (data.collections.items.length === 0) {
+            return setSearchResult([]);
+        }
+
+        console.log(data.collections.items, 'data collections')
+
+        return setSearchResult(data.collections.items);
     }
+
+    useEffect(() => {
+        if (searchTerm.length > 0) {
+            getCollections(searchTerm);
+            console.log(searchTerm, 'searchTerm')
+        }
+    }, [searchTerm])
 
 
 
@@ -38,7 +53,7 @@ const CollectionsOptions = () => {
             <Modal centered isOpen={modalOpen} onClose={() => setModalOpen(false)}>
                 <section className='flex flex-column items-center'>
                     <h1>Adicionar Coleção</h1>
-                    <InputSearch placeholder="Buscar Coleção" size="regular" onChange={(e : any) => getCollections(e)}/>
+                    <InputSearch placeholder="Buscar Coleção" size="regular" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
 
                     {
                        searchResult.length > 0 && searchResult.map((collection: any) => {
