@@ -1,0 +1,3 @@
+mutation addCollection($collectionId: String) {
+    addCollection(collectionId: $collectionId) 
+}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useContext } from 'react'
 import ButtonWithIcon from '@vtex/styleguide/lib/ButtonWithIcon'
 import PlusLines from '@vtex/styleguide/lib/icon/PlusLines'
 import Modal from '@vtex/styleguide/lib/Modal'
@@ -6,9 +6,12 @@ import InputSearch from '@vtex/styleguide/lib/InputSearch'
 
 
 import { useApolloClient } from 'react-apollo';
+import { CollectionsContext } from './hooks/index'
 
 /* @ts-ignore */
 import collections from './graphql/collections.gql'
+/* @ts-ignore */
+import addCollection from './graphql/addCollection.gql'
 
 const plus = <PlusLines />;
 
@@ -16,6 +19,7 @@ const CollectionsOptions = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [searchResult, setSearchResult] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const { setUpdateCollections } = useContext(CollectionsContext);
 
     const client = useApolloClient();
 
@@ -46,6 +50,23 @@ const CollectionsOptions = () => {
     }, [searchTerm])
 
 
+    const handleAdd = (collection) => {
+        console.log(typeof collection.id, 'collection')
+        client.mutate({
+            mutation: addCollection,
+            variables: {
+                collectionId: collection.id
+            }
+        }).then((data) => {
+            console.log(data, 'data')
+            setUpdateCollections(true);
+            setModalOpen(false);
+        }).catch((err) => {
+            console.log(err, 'err')
+        })
+    };
+
+
 
     return (
         <section>
@@ -60,7 +81,7 @@ const CollectionsOptions = () => {
                             return (
                                 <section key={collection.id} className='flex justify-between items-center w-100'>
                                     <p>{collection.name}</p>
-                                    <ButtonWithIcon icon={plus} variation="primary" iconPosition="right" onClick={() => console.log(collection)}>Adicionar</ButtonWithIcon>
+                                    <ButtonWithIcon icon={plus} variation="primary" iconPosition="right" onClick={() => handleAdd(collection)}>Adicionar</ButtonWithIcon>
                                 </section>
                             )
                         })

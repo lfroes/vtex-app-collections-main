@@ -1,6 +1,6 @@
 type Query {
   helloworld: String
-  sharedCollections: [Collection]
+  sharedCollections: [CollectionIntern]
   verify: Boolean
   getCollections: [CollectionIntern]
 }
@@ -12,8 +12,9 @@ type Collection {
 type Mutation {
   clearMasterData: Boolean
   changeSellerEmail(email: String, id: String): Boolean
+  addCollection(collectionId: String): Boolean
+  removeCollection(collectionId: String): Boolean
 }
-
 
 type CollectionIntern {
   id: Int

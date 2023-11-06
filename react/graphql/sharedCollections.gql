@@ -1,5 +1,13 @@
 query sharedCollections {
     sharedCollections {
-    collectionId
+      name
+      dateTo
+      dateFrom
+      id
+      lastModifiedBy
+      totalSku
+      totalProducts
+      searchable
+      highlight
   }
 }

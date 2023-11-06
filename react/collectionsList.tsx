@@ -1,12 +1,21 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useContext, useEffect } from 'react'
 import Spinner from '@vtex/styleguide/lib/Spinner'
 
 import { useQuery, useLazyQuery, useApolloClient } from 'react-apollo'
+import ButtonWithIcon from '@vtex/styleguide/lib/ButtonWithIcon'
+import Delete from '@vtex/styleguide/lib/icon/Delete'
 
 /* @ts-ignore */
 import verify from './graphql/verify.gql'
 /* @ts-ignore */
 import sharedCollections from './graphql/sharedCollections.gql'
+/* @ts-ignore */
+import removeCollection from './graphql/removeCollection.gql'
+
+import { CollectionsContext } from './hooks/index'
+
+
+const remove = <Delete />
 
 const NotFound = () => {
     return (
@@ -19,10 +28,14 @@ const NotFound = () => {
 
 const CollectionsList = () => {
     const [loading, setLoading] = useState(true);
-    const { data, error, refetch } = useQuery(verify);
+    const { data, error, refetch } = useQuery(verify, {
+        fetchPolicy: 'no-cache'
+    });
     const [collections, setCollections] = useState([]);
+    const { updateCollections, setUpdateCollections } = useContext(CollectionsContext);
+    const client = useApolloClient();
 
-    const [getCollection, {data: collectionsData, error: collectionError}] = useLazyQuery(sharedCollections, {
+    const [getCollection, {data: collectionsData, error: collectionError, refetch: collectionRefetch}] = useLazyQuery(sharedCollections, {
         fetchPolicy: 'no-cache'
     })
 
@@ -41,12 +54,43 @@ const CollectionsList = () => {
 
 
     useMemo(() => {
+        console.log('collectionsData memo')
         if (collectionsData) {
             console.log(collectionsData, 'collectionsData');
             setCollections(collectionsData.sharedCollections);
             return setLoading(false)
         }
-    }, [collectionsData, collectionError]);
+    }, [collectionsData, collectionError, collectionRefetch]);
+
+    const handleRemove = async (id) => {
+        console.log(id, 'id')
+        client.mutate({
+            mutation: removeCollection,
+            variables: {
+                collectionId: id.toString()
+            }
+        }).then((data) => {
+            console.log(data, 'data')
+            setUpdateCollections(true);
+        }).catch((err) => {
+            console.log(err, 'err')
+        })
+    }
+
+    useEffect(() => {
+        if (updateCollections) {
+            setLoading(true);
+
+            const timer = setTimeout(() => {
+                console.log('updateCollections')
+                collectionRefetch();
+                setLoading(false);
+                setUpdateCollections(false);
+            }, 5000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [updateCollections])
 
 
     const renderCollections = useMemo(() => {
@@ -65,7 +109,22 @@ const CollectionsList = () => {
         if (collections.length > 0) {
             return (
                 <section>
-                    <h1>Teste</h1>
+                    <h1>Coleções compartilhadas</h1>
+                    <section>
+                        {
+                            collections.map((collection: any) => {
+                                return (
+                                    <section key={collection.id} className='flex justify-between items-center w-100'>
+                                        <p className='f4 lh-copy'>{collection.name}</p>
+                                        <p className='f4 lh-copy'>Produtos: {collection.totalProducts}</p>
+                                        <ButtonWithIcon icon={remove} variation="danger" onClick={() => handleRemove(collection.id)}>
+                                            Remover
+                                        </ButtonWithIcon>
+                                    </section>
+                                )
+                            })
+                        }
+                    </section>
                 </section>
             )
         }

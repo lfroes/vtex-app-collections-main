@@ -1,0 +1,3 @@
+mutation removeCollection($collectionId: String) {
+    removeCollection(collectionId: $collectionId) 
+}

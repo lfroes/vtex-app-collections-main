@@ -2,7 +2,7 @@ import type { ClientsConfig, ServiceContext } from '@vtex/api'
 import { LRUCache, Service } from '@vtex/api'
 
 import { Clients } from './clients'
-import { getCollections, sharedCollections, verify } from './resolvers'
+import { addCollection, getCollections, removeCollection, sharedCollections, verify } from './resolvers'
 
 const TIMEOUT_MS = 8000
 
@@ -50,6 +50,22 @@ export default new Service({
         verify,
         sharedCollections,
         getCollections
+      },
+      Mutation: {
+        addCollection(
+          _: any,
+          { collectionId }: { collectionId: string },
+          ctx: Context
+        ) {
+          return addCollection(_, { collectionId }, ctx)
+        },
+        removeCollection(
+          _: any,
+          { collectionId }: { collectionId: string },
+          ctx: Context
+        ) {
+          return removeCollection(_, { collectionId }, ctx)
+        }
       }
     }
   }

@@ -9,7 +9,7 @@ export default class Vtex extends ExternalClient {
 
     public async createEntity(): Promise<any> {
         try {
-            const res = await this.http.put(`/api/dataentities/collectionseller070/schemas/v1`, {
+            const res = await this.http.put(`/api/dataentities/collectionseller071/schemas/v1`, {
                 "properties": {
                     "collectionId": {
                         "type": "string"
@@ -66,6 +66,18 @@ export default class Vtex extends ExternalClient {
         });
 
         
+
+        return data;
+    }
+
+    public async getCollection(collectionId: string): Promise<any> {
+        const data = await this.http.get(`/api/catalog_system/pvt/collection/${collectionId}`, {
+            headers: {
+                'X-Vtex-Use-Https': 'true',
+                'Proxy-Authorization': this.context.adminUserAuthToken || this.context.authToken,
+                'VtexIdClientAutCookie': this.context.adminUserAuthToken || this.context.authToken,
+            }
+        });
 
         return data;
     }
