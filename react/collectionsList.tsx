@@ -110,8 +110,28 @@ const CollectionsList = () => {
             return (
                 <section>
                     <h1>Coleções compartilhadas</h1>
-                    <section>
+                    <table className='w-100'>
+                        <tr className='flex justify-between items-center w-100'>
+                            <th className='w-30'>Nome</th>
+                            <th className='w-30'>Produtos</th>
+                            <th className='w-30'>Ações</th>
+                        </tr>
                         {
+                            collections.map((collection: any) => {
+                                return (
+                                    <tr key={collection.id} className='flex justify-between items-center w-100'>
+                                        <td className='w-30 flex justify-center'>{collection.name}</td>
+                                        <td className='w-30 flex justify-center'>Produtos: {collection.totalProducts}</td>
+                                        <td className='w-30 flex justify-center'>
+                                            <ButtonWithIcon icon={remove} variation="danger" onClick={() => handleRemove(collection.id)}>
+                                                Remover
+                                            </ButtonWithIcon>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        }
+                        {/* {
                             collections.map((collection: any) => {
                                 return (
                                     <section key={collection.id} className='flex justify-between items-center w-100'>
@@ -123,8 +143,8 @@ const CollectionsList = () => {
                                     </section>
                                 )
                             })
-                        }
-                    </section>
+                        } */}
+                    </table>
                 </section>
             )
         }
