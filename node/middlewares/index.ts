@@ -183,9 +183,9 @@ export async function removeSellerProduct(ctx: Context, next: () => Promise<any>
 
 
 export async function getCollectionProducts(ctx: Context, next: () => Promise<any>) {
-    const body = await json(ctx.req);
+    const { collectionId } = ctx.query; 
 
-    if (!body.collectionId) {
+    if (!collectionId) {
         ctx.status = 400
         ctx.body = {
         status: 'ERROR',
@@ -195,7 +195,7 @@ export async function getCollectionProducts(ctx: Context, next: () => Promise<an
         return
     }
 
-    const collection = await ctx.clients.vtex.getCollection(body.collectionId);
+    const collection = await ctx.clients.vtex.getCollection(collectionId as string);
 
     if (!collection) {
         ctx.status = 404
@@ -207,7 +207,7 @@ export async function getCollectionProducts(ctx: Context, next: () => Promise<an
         return
     }
 
-    const products = await ctx.clients.vtex.productsInCollection(body.collectionId);
+    const products = await ctx.clients.vtex.productsInCollection(collectionId as string);
 
     if (!products || products === null) {
         ctx.status = 404

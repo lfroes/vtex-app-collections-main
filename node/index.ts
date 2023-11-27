@@ -54,7 +54,7 @@ export default new Service({
       GET: [getCollectionProducts]
     }),
     "deleteProduct": method({
-      DELETE: [removeSellerProduct]
+      POST: [removeSellerProduct]
     }),
   },
   graphql: {
