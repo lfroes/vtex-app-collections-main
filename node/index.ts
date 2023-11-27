@@ -1,8 +1,9 @@
 import type { ClientsConfig, ServiceContext } from '@vtex/api'
-import { LRUCache, Service } from '@vtex/api'
+import { LRUCache, Service, method } from '@vtex/api'
 
 import { Clients } from './clients'
 import { addCollection, getCollections, removeCollection, sharedCollections, verify } from './resolvers'
+import { Authenticate, addSellerProduct, getCollectionProducts, getCollectionsRoute, removeSellerProduct } from './middlewares'
 
 const TIMEOUT_MS = 8000
 
@@ -43,6 +44,18 @@ export default new Service({
   clients,
   routes: {
     // `status` is the route ID from service.json. It maps to an array of middlewares (or a single handler).
+    AuthSeller: method({
+      POST: [Authenticate, getCollectionsRoute]
+    }),
+    addProduct: method({
+      POST: [addSellerProduct]
+    }),
+    productsInCollection: method({
+      GET: [getCollectionProducts]
+    }),
+    "deleteProduct": method({
+      DELETE: [removeSellerProduct]
+    }),
   },
   graphql: {
     resolvers: {

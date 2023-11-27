@@ -1,4 +1,6 @@
 import { IOClients } from '@vtex/api'
+import { Catalog } from '@vtex/clients'
+
 
 import Status from './status'
 import Vtex from './vtex'
@@ -11,5 +13,9 @@ export class Clients extends IOClients {
 
   public get vtex() {
     return this.getOrSet('vtex', Vtex)
+  }
+
+  public get catalog() {
+    return this.getOrSet('catalog', Catalog)
   }
 }

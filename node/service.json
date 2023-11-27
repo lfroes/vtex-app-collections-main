@@ -6,5 +6,21 @@
   "maxReplicas": 4,
   "workers": 1,
   "routes": {
+    "AuthSeller": {
+      "path": "/shared-collections/api/auth/seller",
+      "public": true
+    },
+    "addProduct": {
+      "path": "/shared-collections/api/add-product",
+      "public": true
+    },
+    "productsInCollection": {
+      "path": "/shared-collections/api/products-in-collection",
+      "public": true
+    },
+    "deleteProduct": {
+      "path": "/shared-collections/api/delete-product",
+      "public": true
+    }
   }
 }

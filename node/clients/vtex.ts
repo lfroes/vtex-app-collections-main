@@ -82,6 +82,68 @@ export default class Vtex extends ExternalClient {
         return data;
     }
 
+    public async getSkuByRefId(refId: string): Promise<any> {
+        const data = await this.http.get(`/api/catalog/pvt/stockkeepingunit?refId=${refId}`, {
+            headers: {
+                'X-Vtex-Use-Https': 'true',
+                'Proxy-Authorization': this.context.adminUserAuthToken || this.context.authToken,
+                'VtexIdClientAutCookie': this.context.adminUserAuthToken || this.context.authToken,
+            }
+        });
+
+        return data;
+    }
+
+    public async productsInCollection(collectionId: string): Promise<any> {
+        const data = await this.http.get(`/api/catalog/pvt/collection/${collectionId}/products`, {
+            headers: {
+                'X-Vtex-Use-Https': 'true',
+                'Proxy-Authorization': this.context.adminUserAuthToken || this.context.authToken,
+                'VtexIdClientAutCookie': this.context.adminUserAuthToken || this.context.authToken,
+            }
+        });
+
+        return data;
+    }
+
+    public async addProductToCollection(collectionId: string, skuId: string): Promise<any> {
+        const data = await this.http.post(`/api/catalog/pvt/subcollection/${collectionId}/stockkeepingunit`, {
+            "SkuId": skuId
+        }, {
+            headers: {
+                'X-Vtex-Use-Https': 'true',
+                'Proxy-Authorization': this.context.adminUserAuthToken || this.context.authToken,
+                'VtexIdClientAutCookie': this.context.adminUserAuthToken || this.context.authToken,
+            }
+        });
+
+        return data;
+    }
+
+    public async getSubCollection(collectionId: string): Promise<any> {
+        const data = await this.http.get(`/api/catalog/pvt/collection/${collectionId}/subcollection`, {
+            headers: {
+                'X-Vtex-Use-Https': 'true',
+                'Proxy-Authorization': this.context.adminUserAuthToken || this.context.authToken,
+                'VtexIdClientAutCookie': this.context.adminUserAuthToken || this.context.authToken,
+            }
+        });
+
+        return data;
+    }
+
+    public async removeProductFromCollection(collectionId: string, skuId: string): Promise<any> {
+         await this.http.delete(`/api/catalog/pvt/subcollection/${collectionId}/stockkeepingunit/${skuId}`, {
+            headers: {
+                'X-Vtex-Use-Https': 'true',
+                'Proxy-Authorization': this.context.adminUserAuthToken || this.context.authToken,
+                'VtexIdClientAutCookie': this.context.adminUserAuthToken || this.context.authToken,
+            }
+        });
+
+        return;
+    }
+
 
 
 }
