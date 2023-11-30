@@ -82,7 +82,7 @@ export async function getCollectionsRoute(ctx: Context, next: () => Promise<any>
 export async function addSellerProduct(ctx: Context, next: () => Promise<any>) {
     const body = await json(ctx.req);
 
-    if (!body.sellerId || !body.skuId || !body.collectionId) {
+    if (!body.sellerId || !body.skuId || !body.collectionId || !body.idType) {
         ctx.status = 400
         ctx.body = {
         status: 'ERROR',
@@ -90,6 +90,16 @@ export async function addSellerProduct(ctx: Context, next: () => Promise<any>) {
         }
 
         return
+    }
+
+    if (body.idType !== 'refId' && body.idType !== 'skuId') {
+        ctx.status = 400
+        ctx.body = {
+        status: 'ERROR',
+        message: 'Invalid idType'
+        }
+
+        return 
     }
 
     const seller = await ctx.clients.catalog.seller(body.sellerId)
@@ -104,7 +114,13 @@ export async function addSellerProduct(ctx: Context, next: () => Promise<any>) {
         return
     }
 
-    const product = await ctx.clients.vtex.getSkuByRefId(body.skuId);
+    let product: any;
+
+    if (body.idType === 'refId') {
+        product = await ctx.clients.vtex.getSkuByRefId(body.skuId);
+    } else {
+        product = await ctx.clients.catalog.getSkuById(body.skuId);
+    } 
 
     if (!product) {
         ctx.status = 404
@@ -118,6 +134,7 @@ export async function addSellerProduct(ctx: Context, next: () => Promise<any>) {
 
     const subcollection = await ctx.clients.vtex.getSubCollection(body.collectionId);
 
+    console.log(product.Id, 'product');
     const data = await ctx.clients.vtex.addProductToCollection(subcollection[0].Id, product.Id);
 
     ctx.status = 200
@@ -134,7 +151,7 @@ export async function addSellerProduct(ctx: Context, next: () => Promise<any>) {
 export async function removeSellerProduct(ctx: Context, next: () => Promise<any>) {
     const body = await json(ctx.req);
 
-    if (!body.sellerId || !body.skuId || !body.collectionId) {
+    if (!body.sellerId || !body.skuId || !body.collectionId || !body.idType) {
         ctx.status = 400
         ctx.body = {
         status: 'ERROR',
@@ -156,7 +173,17 @@ export async function removeSellerProduct(ctx: Context, next: () => Promise<any>
         return
     }
 
-    const product = await ctx.clients.vtex.getSkuByRefId(body.skuId);
+    let product: any;
+
+    if (body.idType === 'refId') {
+        product = await ctx.clients.vtex.getSkuByRefId(body.skuId);
+    } else {
+        product = await ctx.clients.catalog.getSkuById(body.skuId);
+    } 
+
+    // const product = await ctx.clients.vtex.getSkuByRefId(body.skuId);
+
+    console.log(product, 'product')
 
     const subcollection = await ctx.clients.vtex.getSubCollection(body.collectionId);
 
